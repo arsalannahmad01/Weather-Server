@@ -25,6 +25,6 @@ def external_api(request):
         print(response_data)
         
         print(response_data["current"]["condition"]["text"])
-        return JsonResponse({"weather":response_data["current"]["condition"]["text"], "temprature":response_data["current"]["temp_c"], "humidity":response_data["current"]["humidity"]})
+        return JsonResponse({"weather":response_data["current"]["condition"]["text"], "temprature":response_data["current"]["temp_c"], "feellike": response_data["current"]["feelslike_c"], "humidity":response_data["current"]["humidity"], "city":response_data["location"]["name"], "country":response_data["location"]["country"]})
     except Exception as e:
         return JsonResponse({"error": "Error 500"}, status=500)
