@@ -22,10 +22,6 @@ def external_api(request):
         response = requests.get(api_url)
         response_data = response.json()
 
-        if(response_data["error"]):
-            return JsonResponse({"error": response_data["error"]["message"]}, status=500)
-
         return JsonResponse({"icon":response_data["current"]["condition"]["icon"], "weather":response_data["current"]["condition"]["text"], "temprature":response_data["current"]["temp_c"], "feelslike": response_data["current"]["feelslike_c"], "humidity":response_data["current"]["humidity"], "city":response_data["location"]["name"], "country":response_data["location"]["country"]})
-    except requests.exceptions.RequestException as e:
-        print(e["error"])
-        return JsonResponse({"error": str(e)}, status=500)
+    except Exception as e:
+        return JsonResponse({"error": response_data["error"]["message"]}, status=500)
