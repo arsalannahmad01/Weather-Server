@@ -21,6 +21,8 @@ def external_api(request):
     try:
         response = requests.get(api_url)
         response_data = response.json()
+
+        print(response_data)
         
         print(response_data["current"]["condition"]["text"])
         return JsonResponse({"weather":response_data["current"]["condition"]["text"], "temprature":response_data["current"]["temp_c"], "humidity":response_data["current"]["humidity"]})
