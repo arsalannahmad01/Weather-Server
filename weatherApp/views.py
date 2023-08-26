@@ -17,14 +17,15 @@ def external_api(request):
     if not location:
         return HttpResponseBadRequest("Missing 'location' parameter.")
     
-    api_url = f"https://api.weatherapi.com/v1/current.json?key=a6c3d3462f894fc18bd162511232508&q={location}&aqi=yes"
+    api_url = f"https://api.weatherapi.com/v1/current.json?key=a6c3d3462f894fc18bd162511232508&q={location}&aqi=no"
     try:
         response = requests.get(api_url)
         response_data = response.json()
 
-        print(response_data)
-        
-        print(response_data["current"]["condition"]["text"])
+        if(response_data["error"]):
+            return JsonResponse({"error": response_data["error"]["message"]}, status=500)
+
         return JsonResponse({"icon":response_data["current"]["condition"]["icon"], "weather":response_data["current"]["condition"]["text"], "temprature":response_data["current"]["temp_c"], "feelslike": response_data["current"]["feelslike_c"], "humidity":response_data["current"]["humidity"], "city":response_data["location"]["name"], "country":response_data["location"]["country"]})
-    except Exception as e:
-        return JsonResponse({"error": "Error 500"}, status=500)
+    except requests.exceptions.RequestException as e:
+        print(e["error"])
+        return JsonResponse({"error": str(e)}, status=500)
